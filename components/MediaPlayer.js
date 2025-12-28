@@ -4,6 +4,11 @@
  * Media Player component displays track info and allows track control
  *
  *
+ * TODO:
+ * Gesture handler conflict between "mouse" clicks and taps
+ *  taps prevent moving to and from "advanced mode". add a toggle switch on player
+ *  or control options through settings
+ * 
  */
 import {
   StyleSheet,

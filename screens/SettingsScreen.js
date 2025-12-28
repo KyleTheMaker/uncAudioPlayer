@@ -1,3 +1,8 @@
+/**
+ * THIS PAGE DOES NOTHING RELATIVE TO THE REST OF THE APP
+ * FIX THAT!
+ */
+
 import React, { useState } from "react";
 import {
   View,
