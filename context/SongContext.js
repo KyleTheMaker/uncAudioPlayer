@@ -65,6 +65,9 @@ export const SongProvider = ({ children }) => {
   function playNewSong(songLocation, songName, listArray, listIndex) {
     let asset = null;
 
+
+    //This check is to determine where the song is coming from
+    //local saved file, the app-provided songs, or from the custom playlist
     if (
       typeof songLocation === "string" &&
       songLocation.startsWith("file://")

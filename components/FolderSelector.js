@@ -13,6 +13,11 @@ import { FlatList } from "react-native-gesture-handler";
  * Folder holding music can be selected
  * audio/mp3 files from folder will be listed
  * clicking will play selected file
+ * 
+ * 
+ * TODO:
+ * Consider Methods where copying full folder isn't 
+ * necessary and can be loaded upon individual song selection
  *
  */
 
