@@ -16,7 +16,7 @@ import { FlatList } from "react-native-gesture-handler";
  * 
  * 
  * TODO:
- * Consider Methods where copying full folder isn't 
+ *  - Consider Methods where copying full folder isn't 
  * necessary and can be loaded upon individual song selection
  *
  */
