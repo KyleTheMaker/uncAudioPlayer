@@ -14,12 +14,7 @@ import { FlatList } from "react-native-gesture-handler";
  * audio/mp3 files from folder will be listed
  * clicking will play selected file
  * 
- * 
- * TODO:
- *  - Consider Methods where copying full folder isn't 
- * necessary and can be loaded upon individual song selection
- *
- */
+*/
 
 const FolderSelector = () => {
   const [chosenFolder, setChosenFolder] = useState("");
@@ -28,18 +23,28 @@ const FolderSelector = () => {
   const [songsList, setSongsList] = useState([]);
   const [loading, setLoading] = useState(false);
   const { playNewSong } = useSongPlayer();
-
+  
   const db = useSQLiteContext();
+  
+  
+  //  TODO: Consider Methods where copying full folder isn't 
+  //    necessary and can be loaded upon individual song selection
+  //    New Folder Logic select a folder containing music list out all audio/mpeg files
+  //    only download/copy file from device as user requests.moving to next song will have 
+  //    to see if it's already copied, or should be re-copied.
 
+  // function for permissions and copying of chosen folder contents
   const chooseFolder = async () => {
     setLoading(true);
     setLocalSongs([]);
+
     try {
       const directory = await Directory.pickDirectoryAsync();
       if (directory.canceled) {
         setLoading(false);
         return;
       }
+
       setChosenFolder(directory.name);
       const directoryItems = directory.list().filter((item) => {
         return item instanceof File && item.type == "audio/mpeg";
@@ -53,29 +58,19 @@ const FolderSelector = () => {
         await localMusicDirectory.create();
       }
 
+      // Sanitize song names, then copy each 
+      // corrected song into correctedSongs
       const correctedSongs = await Promise.all(
         directoryItems.map(async (item) => {
           const originalName = item.name;
           const safeName = originalName.replace(/[^\w\s\-\.]/g, "");
-
-          let targetSong = new File(localMusicDirectory, safeName);
-          if (!targetSong.exists) {
-            try {
-              await copyAsync({
-                from: item.uri,
-                to: targetSong.uri,
-              });
-            } catch (copyError) {
-              console.log(`Failed to copy ${originalName}`, copyError);
-            }
-          }
           return {
-            name: item.name,
-            location: targetSong.uri,
-            externalUri: item.uri,
+            name: safeName,
+            location: item.uri,
           };
         })
       );
+
       setLocalSongs(correctedSongs);
     } catch (error) {
       console.error(error);
@@ -103,7 +98,7 @@ const FolderSelector = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>
-        {chosenFolder ? `${chosenFolder} Folder Songs` : "No Folder Selected"}
+        {chosenFolder ? `${chosenFolder} Folder` : "No Folder Selected"}
       </Text>
       <Button
         title={loading ? "Loading..." : "Choose Folder"}

@@ -4,11 +4,19 @@
  *
  *  needs a context provider?
  *  and a way for song component to send back the chosen song
+ *
+ * // TODO: track full list of chosen directory songs
+ *
+ * // TODO: update song control function so they handle only loading
+ * //   content songs as needed. Change track throws error because they're not loaded
+ * //   maybe make a check function, or write checks into every other function
  */
 
 import { createContext, useState, useContext, useEffect } from "react";
 import { AudioAssetMap, getSongListSongs } from "../data/musicdb";
 import { useSQLiteContext } from "expo-sqlite";
+import { Directory, Paths, File } from "expo-file-system";
+import { copyAsync } from "expo-file-system/legacy";
 
 export const SongContext = createContext({
   currentSong: { location: null, name: "Nothing Playing" },
@@ -28,6 +36,7 @@ export const SongProvider = ({ children }) => {
     currentIndex: -1,
   });
 
+  // Access database for any stored songs
   useEffect(() => {
     if (db && isLoading) {
       async function initializePlayer() {
@@ -46,7 +55,7 @@ export const SongProvider = ({ children }) => {
             } else {
               console.error(
                 "Asset not found for first song: ",
-                firstSong.location
+                firstSong.location,
               );
             }
           }
@@ -62,18 +71,46 @@ export const SongProvider = ({ children }) => {
 
   const { currentSong, currentList, currentIndex } = playerState;
 
-  function playNewSong(songLocation, songName, listArray, listIndex) {
+  async function playNewSong(songLocation, songName, listArray, listIndex) {
     let asset = null;
-
 
     //This check is to determine where the song is coming from
     //local saved file, the app-provided songs, or from the custom playlist
+    // TODO: consider moving content file copying and checking to it's own function
+
     if (
       typeof songLocation === "string" &&
       songLocation.startsWith("file://")
     ) {
       console.log("Playing local file:", songLocation);
       asset = songLocation;
+    } else if (
+      typeof songLocation === "string" &&
+      songLocation.startsWith("content://")
+    ) {
+      //Copy the file from location
+      console.log("Retrieving external song: ", songName);
+      console.log("location from: ", songLocation);
+      const localMusicDirectory = new Directory(
+        Paths.document,
+        "localMusicStorage",
+      );
+      if (!localMusicDirectory.exists) {
+        await localMusicDirectory.create();
+      }
+      let targetSong = new File(localMusicDirectory, songName);
+      try {
+        if (!targetSong.exists) {
+          await copyAsync({
+            from: songLocation,
+            to: targetSong.uri,
+          });
+          console.log("copied song to: ", targetSong);
+        }
+      } catch (copyError) {
+        console.log(`Failed to copy ${songName}`, copyError);
+      }
+      asset = targetSong;
     } else if (AudioAssetMap[songLocation]) {
       asset = AudioAssetMap[songLocation];
     } else if (typeof songLocation === "number") {
@@ -91,7 +128,7 @@ export const SongProvider = ({ children }) => {
     }
   }
 
-  function changeTrack(direction) {
+  async function changeTrack(direction) {
     const { currentList, currentIndex } = playerState;
 
     if (currentList.length === 0) return;
@@ -103,9 +140,11 @@ export const SongProvider = ({ children }) => {
     } else if (newIndex < 0) {
       newIndex = currentList.length - 1;
     }
-
+    console.log("current music list: ", currentList);
     const nextSong = currentList[newIndex];
     const songLocation = nextSong.location || nextSong.uri;
+    console.log("Lookinf for song: ", nextSong.name);
+    console.log("Location at: ", songLocation);
     if (!songLocation) {
       console.error("Location not found for next song: ", nextSong);
       return;
@@ -118,6 +157,34 @@ export const SongProvider = ({ children }) => {
     ) {
       console.log("Playing local file:", songLocation);
       asset = songLocation;
+    } else if (
+      typeof songLocation === "string" &&
+      songLocation.startsWith("content://")
+    ) {
+      //Copy the file from location
+      console.log("Retrieving external song: ", nextSong.name);
+      console.log("location from: ", songLocation);
+      const localMusicDirectory = new Directory(
+        Paths.document,
+        "localMusicStorage",
+      );
+      if (!localMusicDirectory.exists) {
+        await localMusicDirectory.create();
+      }
+      let targetSong = new File(localMusicDirectory, nextSong.name);
+      try {
+        if (!targetSong.exists) {
+          await copyAsync({
+            from: songLocation,
+            to: targetSong.uri,
+          });
+          console.log("copied song to: ", targetSong);
+        }
+      } catch (copyError) {
+        console.log(`Failed to copy ${nextSong.name}`, copyError);
+      }
+      console.log("song already exists");
+      asset = targetSong;
     } else if (AudioAssetMap[songLocation]) {
       asset = AudioAssetMap[songLocation];
     } else if (typeof songLocation === "number") {
