@@ -72,25 +72,36 @@ export const SongProvider = ({ children }) => {
   const { currentSong, currentList, currentIndex } = playerState;
 
   async function playNewSong(songLocation, songName, listArray, listIndex) {
-    let asset = null;
+    // Locate the song
+    const asset = await songLocator(songLocation, songName);
+    // Set the song to the player state
+    if (asset) {
+      setPlayerState({
+        currentSong: { location: asset, name: songName },
+        currentList: listArray,
+        currentIndex: listIndex,
+      });
+    } else {
+      console.log("error finding song at location: ", songLocation);
+    }
+  }
 
-    //This check is to determine where the song is coming from
-    //local saved file, the app-provided songs, or from the custom playlist
-    // TODO: consider moving content file copying and checking to it's own function
-
+  // determines where the song is coming from and returns the location
+  const songLocator = async (songLocation, name) => {
+    
     if (
+      //stored in app
       typeof songLocation === "string" &&
-      songLocation.startsWith("file://")
+      songLocation.startsWith("file://") 
     ) {
       console.log("Playing local file:", songLocation);
-      asset = songLocation;
+      return songLocation;
     } else if (
+      //stored on device
       typeof songLocation === "string" &&
-      songLocation.startsWith("content://")
+      songLocation.startsWith("content://") 
     ) {
-      //Copy the file from location
-      console.log("Retrieving external song: ", songName);
-      console.log("location from: ", songLocation);
+      //Copy the file from device to local
       const localMusicDirectory = new Directory(
         Paths.document,
         "localMusicStorage",
@@ -98,7 +109,7 @@ export const SongProvider = ({ children }) => {
       if (!localMusicDirectory.exists) {
         await localMusicDirectory.create();
       }
-      let targetSong = new File(localMusicDirectory, songName);
+      let targetSong = new File(localMusicDirectory, name);
       try {
         if (!targetSong.exists) {
           await copyAsync({
@@ -108,23 +119,16 @@ export const SongProvider = ({ children }) => {
           console.log("copied song to: ", targetSong);
         }
       } catch (copyError) {
-        console.log(`Failed to copy ${songName}`, copyError);
+        console.log(`Failed to copy ${name}`, copyError);
       }
-      asset = targetSong;
+      console.log("song already exists");
+      return targetSong;
     } else if (AudioAssetMap[songLocation]) {
-      asset = AudioAssetMap[songLocation];
+      // hardcoded in app
+      return AudioAssetMap[songLocation];
     } else if (typeof songLocation === "number") {
-      asset = songLocation;
-    }
-    if (asset) {
-      //sets the require function in the location
-      setPlayerState({
-        currentSong: { location: asset, name: songName },
-        currentList: listArray,
-        currentIndex: listIndex,
-      });
-    } else {
-      console.log("error finding song at location: ", songLocation);
+      // handle other cases
+      return songLocation;
     }
   }
 
@@ -149,47 +153,10 @@ export const SongProvider = ({ children }) => {
       console.error("Location not found for next song: ", nextSong);
       return;
     }
-    let asset = null;
-
-    if (
-      typeof songLocation === "string" &&
-      songLocation.startsWith("file://")
-    ) {
-      console.log("Playing local file:", songLocation);
-      asset = songLocation;
-    } else if (
-      typeof songLocation === "string" &&
-      songLocation.startsWith("content://")
-    ) {
-      //Copy the file from location
-      console.log("Retrieving external song: ", nextSong.name);
-      console.log("location from: ", songLocation);
-      const localMusicDirectory = new Directory(
-        Paths.document,
-        "localMusicStorage",
-      );
-      if (!localMusicDirectory.exists) {
-        await localMusicDirectory.create();
-      }
-      let targetSong = new File(localMusicDirectory, nextSong.name);
-      try {
-        if (!targetSong.exists) {
-          await copyAsync({
-            from: songLocation,
-            to: targetSong.uri,
-          });
-          console.log("copied song to: ", targetSong);
-        }
-      } catch (copyError) {
-        console.log(`Failed to copy ${nextSong.name}`, copyError);
-      }
-      console.log("song already exists");
-      asset = targetSong;
-    } else if (AudioAssetMap[songLocation]) {
-      asset = AudioAssetMap[songLocation];
-    } else if (typeof songLocation === "number") {
-      asset = songLocation;
-    }
+    
+    // get song and location
+    const asset = await songLocator(songLocation, nextSong.name);
+    
     if (asset) {
       setPlayerState({
         currentSong: { location: asset, name: nextSong.name },
