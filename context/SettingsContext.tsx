@@ -14,5 +14,6 @@ import { createContext, useState, useContext, useEffect } from "react";
 
 export const SettingsContext = createContext({
     ButtonControl: true,
-
+    GestureControl: false,
+    MouseControl: false,
 })

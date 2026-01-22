@@ -16,7 +16,7 @@
     "eas": "^0.1.0",
     "expo": "~54.0.7",
     "expo-audio": "^1.0.14",
-    "expo-dev-client": "~6.0.17",
+    "expo-dev-client": "~6.0.20",
     "expo-document-picker": "~14.0.7",
     "expo-file-system": "~19.0.17",
     "expo-sqlite": "~16.0.8",

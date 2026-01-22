@@ -2,14 +2,6 @@
  * This is for providing song information to
  * children components via context.
  *
- *  needs a context provider?
- *  and a way for song component to send back the chosen song
- *
- * // TODO: track full list of chosen directory songs
- *
- * // TODO: update song control function so they handle only loading
- * //   content songs as needed. Change track throws error because they're not loaded
- * //   maybe make a check function, or write checks into every other function
  */
 
 import { createContext, useState, useContext, useEffect } from "react";
@@ -94,7 +86,6 @@ export const SongProvider = ({ children }) => {
       typeof songLocation === "string" &&
       songLocation.startsWith("file://") 
     ) {
-      console.log("Playing local file:", songLocation);
       return songLocation;
     } else if (
       //stored on device
@@ -121,8 +112,8 @@ export const SongProvider = ({ children }) => {
       } catch (copyError) {
         console.log(`Failed to copy ${name}`, copyError);
       }
-      console.log("song already exists");
-      return targetSong;
+      console.log("playing song from local directory", localMusicDirectory.uri);
+      return targetSong.uri;
     } else if (AudioAssetMap[songLocation]) {
       // hardcoded in app
       return AudioAssetMap[songLocation];
@@ -144,11 +135,8 @@ export const SongProvider = ({ children }) => {
     } else if (newIndex < 0) {
       newIndex = currentList.length - 1;
     }
-    console.log("current music list: ", currentList);
     const nextSong = currentList[newIndex];
     const songLocation = nextSong.location || nextSong.uri;
-    console.log("Lookinf for song: ", nextSong.name);
-    console.log("Location at: ", songLocation);
     if (!songLocation) {
       console.error("Location not found for next song: ", nextSong);
       return;
