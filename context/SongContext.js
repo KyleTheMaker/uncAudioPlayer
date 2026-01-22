@@ -2,13 +2,13 @@
  * This is for providing song information to
  * children components via context.
  *
- *  needs a context provider?
- *  and a way for song component to send back the chosen song
  */
 
 import { createContext, useState, useContext, useEffect } from "react";
 import { AudioAssetMap, getSongListSongs } from "../data/musicdb";
 import { useSQLiteContext } from "expo-sqlite";
+import { Directory, Paths, File } from "expo-file-system";
+import { copyAsync } from "expo-file-system/legacy";
 
 export const SongContext = createContext({
   currentSong: { location: null, name: "Nothing Playing" },
@@ -28,6 +28,7 @@ export const SongProvider = ({ children }) => {
     currentIndex: -1,
   });
 
+  // Access database for any stored songs
   useEffect(() => {
     if (db && isLoading) {
       async function initializePlayer() {
@@ -46,7 +47,7 @@ export const SongProvider = ({ children }) => {
             } else {
               console.error(
                 "Asset not found for first song: ",
-                firstSong.location
+                firstSong.location,
               );
             }
           }
@@ -62,22 +63,11 @@ export const SongProvider = ({ children }) => {
 
   const { currentSong, currentList, currentIndex } = playerState;
 
-  function playNewSong(songLocation, songName, listArray, listIndex) {
-    let asset = null;
-
-    if (
-      typeof songLocation === "string" &&
-      songLocation.startsWith("file://")
-    ) {
-      console.log("Playing local file:", songLocation);
-      asset = songLocation;
-    } else if (AudioAssetMap[songLocation]) {
-      asset = AudioAssetMap[songLocation];
-    } else if (typeof songLocation === "number") {
-      asset = songLocation;
-    }
+  async function playNewSong(songLocation, songName, listArray, listIndex) {
+    // Locate the song
+    const asset = await songLocator(songLocation, songName);
+    // Set the song to the player state
     if (asset) {
-      //sets the require function in the location
       setPlayerState({
         currentSong: { location: asset, name: songName },
         currentList: listArray,
@@ -88,7 +78,52 @@ export const SongProvider = ({ children }) => {
     }
   }
 
-  function changeTrack(direction) {
+  // determines where the song is coming from and returns the location
+  const songLocator = async (songLocation, name) => {
+    
+    if (
+      //stored in app
+      typeof songLocation === "string" &&
+      songLocation.startsWith("file://") 
+    ) {
+      return songLocation;
+    } else if (
+      //stored on device
+      typeof songLocation === "string" &&
+      songLocation.startsWith("content://") 
+    ) {
+      //Copy the file from device to local
+      const localMusicDirectory = new Directory(
+        Paths.document,
+        "localMusicStorage",
+      );
+      if (!localMusicDirectory.exists) {
+        await localMusicDirectory.create();
+      }
+      let targetSong = new File(localMusicDirectory, name);
+      try {
+        if (!targetSong.exists) {
+          await copyAsync({
+            from: songLocation,
+            to: targetSong.uri,
+          });
+          console.log("copied song to: ", targetSong);
+        }
+      } catch (copyError) {
+        console.log(`Failed to copy ${name}`, copyError);
+      }
+      console.log("playing song from local directory", localMusicDirectory.uri);
+      return targetSong.uri;
+    } else if (AudioAssetMap[songLocation]) {
+      // hardcoded in app
+      return AudioAssetMap[songLocation];
+    } else if (typeof songLocation === "number") {
+      // handle other cases
+      return songLocation;
+    }
+  }
+
+  async function changeTrack(direction) {
     const { currentList, currentIndex } = playerState;
 
     if (currentList.length === 0) return;
@@ -100,26 +135,16 @@ export const SongProvider = ({ children }) => {
     } else if (newIndex < 0) {
       newIndex = currentList.length - 1;
     }
-
     const nextSong = currentList[newIndex];
     const songLocation = nextSong.location || nextSong.uri;
     if (!songLocation) {
       console.error("Location not found for next song: ", nextSong);
       return;
     }
-    let asset = null;
-
-    if (
-      typeof songLocation === "string" &&
-      songLocation.startsWith("file://")
-    ) {
-      console.log("Playing local file:", songLocation);
-      asset = songLocation;
-    } else if (AudioAssetMap[songLocation]) {
-      asset = AudioAssetMap[songLocation];
-    } else if (typeof songLocation === "number") {
-      asset = songLocation;
-    }
+    
+    // get song and location
+    const asset = await songLocator(songLocation, nextSong.name);
+    
     if (asset) {
       setPlayerState({
         currentSong: { location: asset, name: nextSong.name },

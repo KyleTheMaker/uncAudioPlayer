@@ -5,9 +5,6 @@
  * This component is for a selectable song item
  * Song should get its pressable text from parent list
  * parent list dictates if Long Press should be add or remove
- * Currently action pressable has actionSelectedSong as pressOut function
- * Main song Pressable uses playSelectedSong function for onPressOut
- *
  *
  */
 
@@ -23,16 +20,17 @@ const Song = (props) => {
         onLongPress={() => {
           setVisible(!isVisible);
         }}
-        onPressOut={() => {
+        onPress={() => {
           props.playSong(props.songLocation, props.songName);
         }}
       >
         {isVisible && (
           <Pressable
             style={styles.pressRemove}
-            onPressOut={() => {
+            onPress={() => {
               props.actionFunction(props.songName, props.songLocation);
               Alert.alert(props.actionText + " " + props.songName);
+              setVisible(!isVisible);
             }}
           >
             <Text>{props.actionText}</Text>
