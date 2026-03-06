@@ -48,9 +48,8 @@ const SongList = () => {
         data={songsList}
         renderItem={({ item, index }) => (
           <Song
-            songName={item.name}
+            songInfo={item}
             actionText={"Add Song"}
-            songLocation={item.location}
             playSong={() => handlePlaySong(item, songsList, index)}
             actionFunction={handleAddSong}
           />

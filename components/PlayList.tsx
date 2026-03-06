@@ -62,9 +62,8 @@ const PlayList = () => {
         data={songsList}
         renderItem={({ item, index }) => (
           <Song
-            songName={item.name}
+            songInfo={item}
             actionText={"Remove Song"}
-            songLocation={item.location}
             playSong={() =>
               handlePlaySong(item, songsList, index)
             }

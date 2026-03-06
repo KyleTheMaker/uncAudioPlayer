@@ -4,7 +4,7 @@ import { useState, useContext } from "react";
 import { StatusBar } from "expo-status-bar";
 
 
-import PlayList from "../components/PlayList";
+import PlayList from "@/components/PlayList";
 
 export default function PlaylistScreen() {
 

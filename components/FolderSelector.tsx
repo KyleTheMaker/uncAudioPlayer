@@ -54,9 +54,8 @@ const FolderSelector = () => {
         data={songs}
         renderItem={({ item, index }) => (
           <Song
-            songName={item.name}
+            songInfo={item}
             actionText={"Add Song"}
-            songLocation={item.location}
             playSong={() => handlePlaySong(item, songs, index)}
             actionFunction={() => handleAddSong(item)}
           />

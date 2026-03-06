@@ -20,7 +20,7 @@ import { usePlayerGestures } from "@/hooks/usePlayerGestures";
 
 import HelpModal from "./HelpModal";
 import MediaButton from "./MediaButton";
-import { useSongPlayer } from "../context/SongContext";
+import { useSongPlayer } from "@/context/SongContext";
 import { useNavigation } from "@react-navigation/native";
 
 const MediaPlayer = () => {
