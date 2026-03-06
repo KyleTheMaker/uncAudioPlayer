@@ -8,16 +8,17 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
+import { SongInfo } from "@/types/audio";
 
 import SongList from "../components/SongList";
 import FolderSelector from "../components/FolderSelector";
 
 export default function App() {
-  const [playSong, setPlaySong] = useState("");
+  // const [playSong, setPlaySong] = useState("");
 
-  function setSong(song) {
-    setPlaySong(song);
-  }
+  // function setSong(song: SongInfo) {
+  //   setPlaySong(song);
+  // }
 
   return (
     <SafeAreaView
@@ -27,10 +28,10 @@ export default function App() {
         <Header />
       </View>
       <View style={{flex: 1, marginVertical: 8}}>
-        <SongList playSong={setSong} />
+        <SongList />
       </View>
       <View style={{flex:1, marginVertical: 8}}>
-        <FolderSelector style={{flex: 1,}} />
+        <FolderSelector />
       </View>
       <StatusBar style="auto" />
     </SafeAreaView>

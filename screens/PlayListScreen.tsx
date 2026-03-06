@@ -7,17 +7,12 @@ import { StatusBar } from "expo-status-bar";
 import PlayList from "../components/PlayList";
 
 export default function PlaylistScreen() {
-  const [playSong, setPlaySong] = useState("");
-
-  function setSong(song) {
-    setPlaySong(song);
-  }
 
   return (
     <SafeAreaView
       style={{ flex: 1, flexDirection: "column", overflow: "hidden" }}
     >
-      <PlayList playSong={setSong} />
+      <PlayList />
 
       <StatusBar style="auto" />
     </SafeAreaView>

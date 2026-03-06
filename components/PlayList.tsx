@@ -10,15 +10,16 @@
 import { StyleSheet, Text, View, Pressable, FlatList } from "react-native";
 import { useSQLiteContext } from "expo-sqlite";
 import { useState, useEffect, useCallback } from "react";
-import { getPlayListSongs, removeSongFromPlaylist } from "../data/musicdb";
+import { getPlayListSongs, removeSongFromPlaylist } from "@/data/musicdb";
 import { useFocusEffect } from "@react-navigation/native";
-import { useSongPlayer } from "../context/SongContext";
+import { useSongPlayer } from "@/context/SongContext";
+import { SongInfo } from "@/types/audio";
 
 import Song from "./Song";
 
-const PlayList = (props) => {
+const PlayList = () => {
   const db = useSQLiteContext();
-  const [songsList, setSongsList] = useState([]);
+  const [songsList, setSongsList] = useState<SongInfo[]>([]);
   const { playNewSong } = useSongPlayer();
 
   //we're getting all songs from playlist table to display in a flatlist
@@ -37,7 +38,7 @@ const PlayList = (props) => {
     setSongsList(allSongs);
   };
 
-  const handleRemoveSong = async (name) => {
+  const handleRemoveSong = async (name: string) => {
     //remove chosen song from list
     const newList = songsList.filter((song) => song.name !== name);
     setSongsList(newList);
@@ -49,8 +50,8 @@ const PlayList = (props) => {
     }
   };
 
-  const handlePlaySong = (location, name, listArray, listIndex) => {
-    playNewSong(location, name, listArray, listIndex);
+  const handlePlaySong = (songInfo: SongInfo, listArray: SongInfo[], listIndex: number) => {
+    playNewSong({name: songInfo.name, location: songInfo.location, listArray, listIndex});
   };
 
   return (
@@ -64,13 +65,13 @@ const PlayList = (props) => {
             songName={item.name}
             actionText={"Remove Song"}
             songLocation={item.location}
-            playSong={(location, name) =>
-              handlePlaySong(location, name, songsList, index)
+            playSong={() =>
+              handlePlaySong(item, songsList, index)
             }
             actionFunction={() => handleRemoveSong(item.name)}
           />
         )}
-        keyExtractor={(song) => song.id.toString()}
+        keyExtractor={(song) => song.name.toString()}
       />
     </View>
   );

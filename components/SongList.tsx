@@ -12,14 +12,15 @@ import { StyleSheet, Text, View, FlatList } from "react-native";
 import { useSQLiteContext } from "expo-sqlite";
 import { useState, useEffect } from "react";
 import { useSongPlayer } from "../context/SongContext";
+import { SongInfo } from "@/types/audio";
 
 // import { getSongListSongs } from "../data/musicdb";
 import { addSongToPlaylist, getSongListSongs } from "../data/musicdb";
 import Song from "./Song";
 
-const SongList = (props) => {
+const SongList = () => {
   const db = useSQLiteContext();
-  const [songsList, setSongsList] = useState([]);
+  const [songsList, setSongsList] = useState<SongInfo[]>([]);
   // const [playSong, setPlaySong] = useState("");
   const {playNewSong} = useSongPlayer();
 
@@ -32,12 +33,12 @@ const SongList = (props) => {
     loadSongs();
   }, [db]);
 
-  const handleAddSong = async (name,location) => {
-    await addSongToPlaylist(db, name, location);
+  const handleAddSong = async ({name,location}: SongInfo) => {
+    await addSongToPlaylist(db, {name, location});
   };
 
-  const handlePlaySong = (location, name, listArray, listIndex) => {
-    playNewSong(location, name, listArray, listIndex);
+  const handlePlaySong = (songInfo: SongInfo, listArray: SongInfo[], listIndex: number) => {
+    playNewSong({name: songInfo.name, location: songInfo.location, listArray, listIndex});
   };
 
   return (
@@ -50,11 +51,11 @@ const SongList = (props) => {
             songName={item.name}
             actionText={"Add Song"}
             songLocation={item.location}
-            playSong={(location,name) => handlePlaySong(location, name, songsList, index)}
+            playSong={() => handlePlaySong(item, songsList, index)}
             actionFunction={handleAddSong}
           />
         )}
-        keyExtractor={(song) => song.id.toString()}
+        keyExtractor={(song) => song.name.toString()}
       />
     </View>
   );

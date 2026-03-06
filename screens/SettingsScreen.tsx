@@ -16,7 +16,6 @@ import {
   ScrollView,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import BluetoothScanButton from "../components/BluetoothScanButton";
 
 export default function SettingsScreen() {
   const [darkMode, setDarkMode] = useState(false);
@@ -24,33 +23,11 @@ export default function SettingsScreen() {
   const [shuffleByDefault, setShuffleByDefault] = useState(false);
   const [notifications, setNotifications] = useState(true);
 
-  const [scanning, setScanning] = useState(false);
-  const [devices, setDevices] = useState([]);
-
-  const mockDevices = [
-    { id: "AA:BB:CC:DD:01", name: "Sony WH-1000XM4" },
-    { id: "AA:BB:CC:DD:02", name: "AirPods Pro" },
-    { id: "AA:BB:CC:DD:03", name: "JBL Speaker" },
-    { id: "AA:BB:CC:DD:04", name: "Car Bluetooth" },
-  ];
-
-  const startMockScan = () => {
-    setScanning(true);
-    setDevices([]);
-
-    setTimeout(() => {
-      setDevices(mockDevices);
-      setScanning(false);
-    }, 3000);
-  };
-
   const handleReset = () => {
     setDarkMode(false);
     setHighQuality(true);
     setShuffleByDefault(false);
     setNotifications(true);
-    setDevices([]);
-
     Alert.alert("Settings Reset", "All settings have been reset to default.");
   };
 
@@ -98,43 +75,6 @@ export default function SettingsScreen() {
         </Text>
         <Switch value={notifications} onValueChange={setNotifications} />
       </View>
-
-      {/* BLUETOOTH */}
-      <Text style={[styles.sectionTitle, darkMode && styles.darkText]}>
-        Bluetooth
-      </Text>
-
-      <BluetoothScanButton scanning={scanning} onPress={startMockScan} />
-
-      <Text style={[styles.subText, darkMode && styles.darkText]}>
-        Found devices: {devices.length}
-      </Text>
-
-      <FlatList
-        scrollEnabled={false}
-        data={devices}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.deviceRow}>
-            <Text
-              style={[
-                styles.deviceName,
-                darkMode && { color: "#ecfdf5" },
-              ]}
-            >
-              {item.name}
-            </Text>
-            <Text
-              style={[
-                styles.deviceId,
-                darkMode && { color: "#bfdbfe" },
-              ]}
-            >
-              {item.id}
-            </Text>
-          </View>
-        )}
-      />
 
       {/* RESET BUTTON */}
       <TouchableOpacity style={styles.resetBtn} onPress={handleReset}>
