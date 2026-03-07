@@ -3,6 +3,8 @@
  * audio/mp3 files from folder will be listed
  * clicking will play selected file
  * 
+ *  //TODO: Look into replacing FlatList with FlashList
+ * 
 */
 import { Text, Button, FlatList, View, StyleSheet } from "react-native";
 import { useSongPlayer } from "@/context/SongContext";

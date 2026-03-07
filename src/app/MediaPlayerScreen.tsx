@@ -7,6 +7,7 @@
  */
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { MediaControlProvider } from "@/context/MediaControlContext";
 
 
 import MediaPlayer from "@/components/MediaPlayer";
