@@ -15,7 +15,7 @@ import { useSongPlayer } from "../context/SongContext";
 import { SongInfo } from "@/types/audio";
 
 // import { getSongListSongs } from "../data/musicdb";
-import { addSongToPlaylist, getSongListSongs } from "../data/musicdb";
+import { addSongToPlaylist, getSongListSongs } from "@/data/musicdb";
 import Song from "./Song";
 
 const SongList = () => {

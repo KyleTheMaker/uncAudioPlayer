@@ -14,7 +14,7 @@
  */
 
 import { createContext, useState, useContext, useEffect, ReactNode } from "react";
-import { AudioAssetMap, getSongListSongs, SongDBItem } from "../data/musicdb";
+import { AudioAssetMap, getSongListSongs, SongDBItem } from '@/data/musicdb';
 import { useSQLiteContext, SQLiteDatabase } from "expo-sqlite";
 import { Directory, Paths, File } from "expo-file-system";
 import { copyAsync } from "expo-file-system/legacy";

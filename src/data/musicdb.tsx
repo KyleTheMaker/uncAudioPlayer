@@ -19,16 +19,16 @@ export interface SongDBItem {
 }
 
 export const AudioAssetMap: Record<string, string> = {
-  "./assets/music/afrobeat-chill.mp3": require("../assets/music/afrobeat-chill.mp3"),
-  "./assets/music/cats-and-mushrooms.mp3": require("../assets/music/cats-and-mushrooms.mp3"),
-  "./assets/music/chill-lofi.mp3": require("../assets/music/chill-lofi.mp3"),
-  "./assets/music/chill-lounge-lofi.mp3": require("../assets/music/chill-lounge-lofi.mp3"),
-  "./assets/music/chillhop-in-new-york.mp3": require("../assets/music/chillhop-in-new-york.mp3"),
-  "./assets/music/chillhop-lofi.mp3": require("../assets/music/chillhop-lofi.mp3"),
-  "./assets/music/japanese-magic-lofi.mp3": require("../assets/music/japanese-magic-lofi.mp3"),
-  "./assets/music/jazzy-lofi-rhythm.mp3": require("../assets/music/jazzy-lofi-rhythm.mp3"),
-  "./assets/music/peaceful-lofi.mp3": require("../assets/music/peaceful-lofi.mp3"),
-  "./assets/music/unstoppable-dance.mp3": require("../assets/music/unstoppable-dance.mp3"),
+  "./assets/music/afrobeat-chill.mp3": require("@/assets/music/afrobeat-chill.mp3"),
+  "./assets/music/cats-and-mushrooms.mp3": require("@/assets/music/cats-and-mushrooms.mp3"),
+  "./assets/music/chill-lofi.mp3": require("@/assets/music/chill-lofi.mp3"),
+  "./assets/music/chill-lounge-lofi.mp3": require("@/assets/music/chill-lounge-lofi.mp3"),
+  "./assets/music/chillhop-in-new-york.mp3": require("@/assets/music/chillhop-in-new-york.mp3"),
+  "./assets/music/chillhop-lofi.mp3": require("@/assets/music/chillhop-lofi.mp3"),
+  "./assets/music/japanese-magic-lofi.mp3": require("@/assets/music/japanese-magic-lofi.mp3"),
+  "./assets/music/jazzy-lofi-rhythm.mp3": require("@/assets/music/jazzy-lofi-rhythm.mp3"),
+  "./assets/music/peaceful-lofi.mp3": require("@/assets/music/peaceful-lofi.mp3"),
+  "./assets/music/unstoppable-dance.mp3": require("@/assets/music/unstoppable-dance.mp3"),
 };
 
 export async function manageDBIfNeeded(db: SQLite.SQLiteDatabase) {

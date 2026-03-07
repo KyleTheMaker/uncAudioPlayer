@@ -11,7 +11,7 @@
 
 
 import { Gesture, MouseButton } from "react-native-gesture-handler";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { useRouter } from "expo-router";
 import { Dispatch, SetStateAction, } from "react";
 import { AudioPlayer } from "expo-audio";
 import { useSongPlayer } from "@/context/SongContext";
@@ -40,7 +40,7 @@ export const usePlayerGestures = ({
     const MAX_TRANSLATION_Y = 5000;
     const SWIPE_THRESHOLD = 50;
 
-    const navigation = useNavigation<NavigationProp<RootParamList>>();
+    const navigation = useRouter();
 
 {/** Handle Mouse input for Gesture control */}
 

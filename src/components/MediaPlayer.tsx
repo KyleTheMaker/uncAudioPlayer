@@ -18,8 +18,8 @@ import { GestureDetector } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import { usePlayerGestures } from "@/hooks/usePlayerGestures";
 
-import HelpModal from "./HelpModal";
-import MediaButton from "./MediaButton";
+import HelpModal from "@/components/HelpModal";
+import MediaButton from "@/components/MediaButton";
 import { useSongPlayer } from "@/context/SongContext";
 import { useNavigation } from "@react-navigation/native";
 
@@ -36,8 +36,8 @@ const MediaPlayer = () => {
   const [currentVolume, setCurrentVolume] = useState(player.volume);
   const duration = player.duration;
   const coverImages = [
-    require("../assets/vinyl-record.gif"),
-    require("../assets/vinyl-record-static.png"),
+    require("@/assets/vinyl-record.gif"),
+    require("@/assets/vinyl-record-static.png"),
   ];
 
   const navigation = useNavigation();

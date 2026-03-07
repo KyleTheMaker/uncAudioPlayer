@@ -6,19 +6,12 @@
 
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { useState } from "react";
-import { SongInfo } from "@/types/audio";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import SongList from "../components/SongList";
 import FolderSelector from "../components/FolderSelector";
 
 export default function App() {
-  // const [playSong, setPlaySong] = useState("");
-
-  // function setSong(song: SongInfo) {
-  //   setPlaySong(song);
-  // }
 
   return (
     <SafeAreaView
@@ -27,10 +20,10 @@ export default function App() {
       <View style={styles.container}>
         <Header />
       </View>
-      <View style={{flex: 1, marginVertical: 8}}>
+      <View style={styles.listContainer}>
         <SongList />
       </View>
-      <View style={{flex:1, marginVertical: 8}}>
+      <View style={styles.listContainer}>
         <FolderSelector />
       </View>
       <StatusBar style="auto" />
@@ -58,6 +51,10 @@ const styles = StyleSheet.create({
   container: {
     paddingBottom: 10,
     marginBottom: 4,
+  },
+  listContainer: {
+    flex: 1,
+    marginVertical: 8
   },
   headerWrapper: {
     marginHorizontal: 20,
