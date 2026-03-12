@@ -11,7 +11,7 @@ import {
   Pressable,
   Image,
 } from "react-native";
-import { useState, useEffect } from "react";
+import { useState, useEffect, act } from "react";
 import { useAudioPlayer, useAudioPlayerStatus } from "expo-audio";
 import Slider from "@react-native-community/slider";
 import { GestureDetector } from "react-native-gesture-handler";
@@ -21,13 +21,13 @@ import { usePlayerGestures } from "@/hooks/usePlayerGestures";
 import HelpModal from "@/components/HelpModal";
 import MediaButton from "@/components/MediaButton";
 import { useSongPlayer } from "@/context/SongContext";
-import { useNavigation } from "@react-navigation/native";
+import { useMediaControls } from "@/context/MediaControlContext";
 
 const MediaPlayer = () => {
-  const { currentSong, changeTrack } = useSongPlayer();
+  const { currentSong, changeTrack} = useSongPlayer();
+  const { mediaControls } = useMediaControls();
 
   const [isPlay, setIsPlay] = useState(true);
-  const [advancedModeEnabled, setAdvancedModeEnabled] = useState(false);
   const [showHelpModal, setshowHelpModal] = useState(false);
   const [ showVolume, setShowVolume] = useState(false);
 
@@ -39,8 +39,6 @@ const MediaPlayer = () => {
     require("@/assets/vinyl-record.gif"),
     require("@/assets/vinyl-record-static.png"),
   ];
-
-  const navigation = useNavigation();
 
   // play when song changed
   useEffect(() => {
@@ -72,17 +70,30 @@ const MediaPlayer = () => {
     setIsPlay((prevVal) => !prevVal);
   };
 
-  const { exclusiveGesture, doubleTapOnly} = usePlayerGestures({
+  // Manage track control types
+  const { swipeGestures, mouseGestures, noGestures} = usePlayerGestures({
     player,
     handlePlayButton,
-    setAdvancedModeEnabled,
     setShowVolume,
     setCurrentVolume
-  })
+  });
 
   const showHelp = () => {
     setshowHelpModal(true);
   };
+
+  const activeGesture = () => {
+    if(mediaControls.GestureControl){ 
+      console.log("Swipe Gestures Selected.");
+      return swipeGestures};
+    if(mediaControls.MouseControl){
+      console.log("Mouse Gestures Selected.");
+      return mouseGestures};
+    if(mediaControls.ButtonControl){
+      return noGestures;
+    }
+    return noGestures;
+  }
 
   return (
     <>
@@ -95,9 +106,12 @@ const MediaPlayer = () => {
         </Pressable>
       </View>
 
-      <GestureDetector
-        gesture={advancedModeEnabled ? exclusiveGesture : doubleTapOnly}
-      >
+{
+/* //TODO: Mouse Buttons Play/Pause does not work - control should come from 
+//player Gesture Hook */
+}
+
+      <GestureDetector gesture={activeGesture()} >
         <View style={styles.mediaPlayer}>
           <View style={styles.imageContainer}>
             <Image style={styles.coverImage} source={currentImage} />
@@ -132,7 +146,7 @@ const MediaPlayer = () => {
             </Text>
           </View>
 
-          {!advancedModeEnabled && (
+          {mediaControls.ButtonControl && (
             <View style={styles.buttonContainer}>
               <View style={styles.buttonRowContainer}>
                 <MediaButton

@@ -14,10 +14,8 @@
  */
 
 import { createContext, useState, useContext, useEffect, ReactNode } from "react";
-import { AudioAssetMap, getSongListSongs, SongDBItem } from '@/data/musicdb';
-import { useSQLiteContext, SQLiteDatabase } from "expo-sqlite";
-import { Directory, Paths, File } from "expo-file-system";
-import { copyAsync } from "expo-file-system/legacy";
+import { getSongListSongs, SongDBItem } from '@/data/musicdb';
+import { useSQLiteContext } from "expo-sqlite";
 import { SongInfo, AudioData } from "@/types/audio";
 import { getSongLocation } from "@/utilities/getSongLocation";
 
@@ -97,7 +95,6 @@ export const SongProvider = ({ children }:{children: ReactNode}) => {
       console.log("error finding song at location: ", newSong.location);
     }
   }
-
 
   async function changeTrack(direction: number) {
     const { currentList, currentIndex } = playerState;

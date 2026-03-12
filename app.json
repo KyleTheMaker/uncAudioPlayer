@@ -31,7 +31,9 @@
     "plugins": [
       "expo-audio",
       "expo-sqlite",
-      "expo-router"
+      "expo-router",
+      "expo-font",
+      "expo-asset"
     ],
     "extra": {
       "eas": {

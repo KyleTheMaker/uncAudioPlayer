@@ -9,27 +9,17 @@ import {
   View,
   Text,
   StyleSheet,
-  FlatList,
   Switch,
-  TouchableOpacity,
-  Alert,
   ScrollView,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import { MediaControlSelections } from "@/components/MediaControlSelections";
 
 export default function SettingsScreen() {
   const [darkMode, setDarkMode] = useState(false);
   const [highQuality, setHighQuality] = useState(true);
   const [shuffleByDefault, setShuffleByDefault] = useState(false);
   const [notifications, setNotifications] = useState(true);
-
-  const handleReset = () => {
-    setDarkMode(false);
-    setHighQuality(true);
-    setShuffleByDefault(false);
-    setNotifications(true);
-    Alert.alert("Settings Reset", "All settings have been reset to default.");
-  };
 
   return (
     <ScrollView
@@ -38,97 +28,14 @@ export default function SettingsScreen() {
     >
       <Text style={[styles.header, darkMode && styles.darkText]}>Settings</Text>
 
+      
       {/* PLAYBACK */}
       <Text style={[styles.sectionTitle, darkMode && styles.darkText]}>
         Playback
       </Text>
+      
+      <MediaControlSelections />
 
-      <View style={styles.row}>
-        <Text style={[styles.label, darkMode && styles.darkText]}>
-          High Quality Audio
-        </Text>
-        <Switch value={highQuality} onValueChange={setHighQuality} />
-      </View>
-
-      <View style={styles.row}>
-        <Text style={[styles.label, darkMode && styles.darkText]}>
-          Shuffle by Default
-        </Text>
-        <Switch value={shuffleByDefault} onValueChange={setShuffleByDefault} />
-      </View>
-
-      {/* GENERAL */}
-      <Text style={[styles.sectionTitle, darkMode && styles.darkText]}>
-        General
-      </Text>
-
-      <View style={styles.row}>
-        <Text style={[styles.label, darkMode && styles.darkText]}>
-          Dark Mode
-        </Text>
-        <Switch value={darkMode} onValueChange={setDarkMode} />
-      </View>
-
-      <View style={styles.row}>
-        <Text style={[styles.label, darkMode && styles.darkText]}>
-          Notifications
-        </Text>
-        <Switch value={notifications} onValueChange={setNotifications} />
-      </View>
-
-      {/* RESET BUTTON */}
-      <TouchableOpacity style={styles.resetBtn} onPress={handleReset}>
-        <Text style={styles.resetText}>Reset All Settings</Text>
-      </TouchableOpacity>
-
-      {/* SUMMARY */}
-      <View
-        style={[
-          styles.summaryBox,
-          darkMode && styles.summaryBoxDark,
-        ]}
-      >
-        <Text
-          style={[
-            styles.summaryTitle,
-            darkMode && { color: "#ecfdf5" },
-          ]}
-        >
-          Current Settings
-        </Text>
-        <Text
-          style={[
-            styles.summaryText,
-            darkMode && { color: "#ecfdf5" },
-          ]}
-        >
-          Theme: {darkMode ? "Dark" : "Light"}
-        </Text>
-        <Text
-          style={[
-            styles.summaryText,
-            darkMode && { color: "#ecfdf5" },
-          ]}
-        >
-          Audio: {highQuality ? "High Quality" : "Standard"}
-        </Text>
-        <Text
-          style={[
-            styles.summaryText,
-            darkMode && { color: "#ecfdf5" },
-          ]}
-        >
-          Shuffle by Default: {shuffleByDefault ? "On" : "Off"}
-        </Text>
-        <Text
-          style={[
-            styles.summaryText,
-            darkMode && { color: "#ecfdf5" },
-          ]}
-        >
-          Notifications: {notifications ? "Enabled" : "Disabled"}
-        </Text>
-      </View>
 
       <StatusBar style={darkMode ? "light" : "dark"} />
     </ScrollView>
@@ -149,6 +56,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 16,
     color: "#064e3b",
+    marginTop: 24,
   },
   darkText: {
     color: "#ecfdf5",

@@ -18,7 +18,6 @@ const HelpModal = ({showHelp, closeHelp}: HelpModalProps) => {
         <View style={styles.modalContent}>
           <Text style={styles.modalTitle}>Advanced Mode</Text>
           <Text style={styles.modalFeature}>Touch features:</Text>
-          <Text style={styles.modalText}><Text style={{fontWeight:'bold'}}>Enable/Disable Advanced Mode</Text>: Double tap</Text>
           <Text style={styles.modalText}><Text style={{fontWeight:'bold'}}>Volume Control</Text>: Swipe up or down</Text>
           <Text style={styles.modalText}><Text style={{fontWeight:'bold'}}>Track Control</Text>: Swipe left or right</Text>
           <Text style={styles.modalText}><Text style={{fontWeight:'bold'}}>Rewind Song</Text>: Long press</Text>

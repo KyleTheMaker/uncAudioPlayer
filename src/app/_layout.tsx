@@ -17,58 +17,61 @@ import { SQLiteProvider } from "expo-sqlite";
 import { Tabs } from "expo-router";
 
 import { manageDBIfNeeded } from "@/data/musicdb";
+import { MediaControlProvider } from "@/context/MediaControlContext";
 
 export default function App() {
   return (
     <GestureHandlerRootView>
       <SafeAreaProvider>
         <SQLiteProvider databaseName="uncMusic.db" onInit={manageDBIfNeeded}>
-          <SongProvider>
-            <Tabs>
-            <Tabs.Screen
-                name='index'
-                options={{
-                    title: "Home",
-                    headerShown: false,
-                    tabBarLabel: "Index",
-                    tabBarIcon: ({ color, size }) => (
-                        <Ionicons name='home' size={size} color={color} />
-                    )}}
-            />
-            <Tabs.Screen
-                name="PlayListScreen"
-                options={{
-                    title: "Playlist",
-                    headerShown: false,
-                    tabBarLabel: "Playlist",
-                    tabBarIcon: ({ color, size }) => (
-                        <Ionicons name='albums' size={size} color={color} />
-                    )}}
+            <MediaControlProvider>
+            <SongProvider>
+                <Tabs>
+                <Tabs.Screen
+                    name='index'
+                    options={{
+                        title: "Home",
+                        headerShown: false,
+                        tabBarLabel: "Index",
+                        tabBarIcon: ({ color, size }) => (
+                            <Ionicons name='home' size={size} color={color} />
+                        )}}
                 />
-            <Tabs.Screen
-                name="MediaPlayerScreen"
-                options={{
-                    title:"Audio Player", 
-                    headerShown: false,
-                    tabBarLabel: "Player",
-                    tabBarIcon: ({ color, size }) => (
-                        <Ionicons name='musical-notes' size={size} color={color} />
-                    )
-                }}
+                <Tabs.Screen
+                    name="PlayListScreen"
+                    options={{
+                        title: "Playlist",
+                        headerShown: false,
+                        tabBarLabel: "Playlist",
+                        tabBarIcon: ({ color, size }) => (
+                            <Ionicons name='albums' size={size} color={color} />
+                        )}}
                     />
-            <Tabs.Screen
-                name="SettingsScreen"
-                options={{
-                    title:"Settings", 
-                    headerShown: false,
-                    tabBarLabel: "Settings",
-                    tabBarIcon: ({ color, size }) => (
-                        <Ionicons name='settings' size={size} color={color} />
-                    )
-                }}
-            />
-        </Tabs>
-          </SongProvider>
+                <Tabs.Screen
+                    name="MediaPlayerScreen"
+                    options={{
+                        title:"Audio Player", 
+                        headerShown: false,
+                        tabBarLabel: "Player",
+                        tabBarIcon: ({ color, size }) => (
+                            <Ionicons name='musical-notes' size={size} color={color} />
+                        )
+                    }}
+                        />
+                <Tabs.Screen
+                    name="SettingsScreen"
+                    options={{
+                        title:"Settings", 
+                        headerShown: false,
+                        tabBarLabel: "Settings",
+                        tabBarIcon: ({ color, size }) => (
+                            <Ionicons name='settings' size={size} color={color} />
+                        )
+                    }}
+                />
+            </Tabs>
+            </SongProvider>
+          </MediaControlProvider>
         </SQLiteProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

@@ -4,8 +4,8 @@
  * Future input types: voice command, visual gesture command
  * 
  * //TODO: Gesture handler conflict between "mouse" clicks and taps
- * taps prevent moving to and from "advanced mode". add a toggle switch on player
- * or control options through settings
+ * separate the different control types so they can be activated individually
+ * 
  * 
  */
 
@@ -19,7 +19,6 @@ import { useSongPlayer } from "@/context/SongContext";
 interface UsePlayerGesturesProps {
     player: AudioPlayer;
     handlePlayButton: () => void;
-    setAdvancedModeEnabled: Dispatch<SetStateAction<boolean>>;
     setShowVolume: Dispatch<SetStateAction<boolean>>;
     setCurrentVolume: Dispatch<SetStateAction<number>>;
 }
@@ -31,7 +30,6 @@ type RootParamList = {
 export const usePlayerGestures = ({
     player,
     handlePlayButton,
-    setAdvancedModeEnabled,
     setShowVolume,
     setCurrentVolume
 }: UsePlayerGesturesProps) => {
@@ -41,6 +39,7 @@ export const usePlayerGestures = ({
     const SWIPE_THRESHOLD = 50;
 
     const navigation = useRouter();
+
 
 {/** Handle Mouse input for Gesture control */}
 
@@ -79,6 +78,8 @@ export const usePlayerGestures = ({
     return value > 0 ? -delta : delta; // down = negative, up = positive
   };
 
+  // For volume and Track control
+  // Vertical for Volume, horizontal for next/prev track.
     const panGesture = Gesture.Pan()
         .onUpdate((e) => {
         const { translationX, translationY } = e;
@@ -127,6 +128,7 @@ export const usePlayerGestures = ({
       }
     });
 
+    // Restart Audio track
   const longPressGesture = Gesture.LongPress()
     .onStart(() => {
       player.seekTo(0);
@@ -134,17 +136,12 @@ export const usePlayerGestures = ({
     .minDuration(750) // Minimum duration in milliseconds for the gesture to be recognized
     .maxDistance(10); // Maximum distance in points the finger can travel during the long press
 
+    // Handle Play/Pause
   const tapGesture = Gesture.Tap().onStart(() => {
     handlePlayButton();
   });
 
-  const doubleTap = Gesture.Tap()
-    .maxDuration(500)
-    .numberOfTaps(2)
-    .onStart(() => {
-      setAdvancedModeEnabled((previousState) => !previousState);
-    });
-
+    // Navigate to Playlist screen 
   const pinchGesture = Gesture.Pinch().onUpdate((e) => {
     if (e.scale > 1) {
       navigation.navigate("Playlist");
@@ -153,18 +150,24 @@ export const usePlayerGestures = ({
 
   const pinchAndPanGesture = Gesture.Simultaneous(pinchGesture, panGesture);
 
-  const exclusiveGesture = Gesture.Exclusive(
+  const mouseGestures = Gesture.Exclusive(
     mouseTripleTap,
     mouseDoubleTap,
-    mouseSingleTap,
+    mouseSingleTap
+  );
+  const swipeGestures = Gesture.Exclusive(
     pinchAndPanGesture,
     longPressGesture,
-    doubleTap,
     tapGesture,
   );
 
+  const noGestures = Gesture.Exclusive(
+
+  );
+
   return {
-    exclusiveGesture,
-    doubleTapOnly: doubleTap
+    mouseGestures,
+    swipeGestures,
+    noGestures
   };
 }
