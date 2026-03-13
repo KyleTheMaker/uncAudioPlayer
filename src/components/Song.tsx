@@ -8,10 +8,18 @@
  *
  */
 
+import { SongInfo } from "@/types/audio";
 import { useState } from "react";
 import { Pressable, Text, Image, StyleSheet, View, Alert } from "react-native";
 
-const Song = (props) => {
+interface SongProps {
+  playSong: (song:SongInfo) => void;
+  actionFunction: (song:SongInfo ) => void;
+  actionText: string;
+  songInfo: SongInfo;
+}
+
+const Song = ({playSong, actionFunction, actionText, songInfo}:SongProps) => {
   const [isVisible, setVisible] = useState(false);
   return (
     <View>
@@ -21,31 +29,28 @@ const Song = (props) => {
           setVisible(!isVisible);
         }}
         onPress={() => {
-          props.playSong(props.songLocation, props.songName);
+          playSong(songInfo);
         }}
       >
         {isVisible && (
           <Pressable
-            style={styles.pressRemove}
+            style={styles.actionButton}
             onPress={() => {
-              props.actionFunction(props.songName, props.songLocation);
-              Alert.alert(props.actionText + " " + props.songName);
+              actionFunction(songInfo);
+              Alert.alert(actionText + " " + songInfo.name);
               setVisible(!isVisible);
             }}
           >
-            <Text>{props.actionText}</Text>
+            <Text style={styles.actionText}>{actionText}</Text>
           </Pressable>
         )}
-        <Text>{props.songName}</Text>
+        <Text style={styles.songName}>{songInfo.name}</Text>
       </Pressable>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  wrapper: {
-    marginVertical: 5,
-  },
   songItem: {
     backgroundColor: "#ecfdf5",
     paddingVertical: 10,
@@ -64,27 +69,13 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 4,
   },
-  leftContent: {
-    flexDirection: "row",
-    alignItems: "center",
-    flexShrink: 1,
-  },
-  iconCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: "#a7f3d0",
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 10,
-  },
   songName: {
     fontSize: 16,
     fontWeight: "600",
     color: "#064e3b",
     flexShrink: 1,
   },
-  removeButton: {
+  actionButton: {
     paddingVertical: 4,
     paddingHorizontal: 10,
     borderRadius: 999,
@@ -93,7 +84,7 @@ const styles = StyleSheet.create({
     borderColor: "#dc2626",
     marginLeft: 8,
   },
-  removeText: {
+  actionText: {
     color: "#b91c1c",
     fontWeight: "700",
     fontSize: 12,

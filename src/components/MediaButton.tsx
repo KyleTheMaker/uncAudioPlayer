@@ -9,12 +9,19 @@
 
 import { StyleSheet, Text, View, Pressable, Alert } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
+import { ComponentProps, Dispatch, SetStateAction } from "react";
 
-const MediaButton = (props) => {
+interface MediaButtonProps {
+  pressOut: () => void;
+  icon: ComponentProps<typeof Ionicons>['name'];
+  size: number;
+}
+
+const MediaButton = ({pressOut, icon, size}: MediaButtonProps) => {
   return (
     <View>
-      <Pressable style={styles.pressBtn} onPressOut={props.pressOut}>
-        <Ionicons name={props.icon} size={props.size} color="#064e3b" />
+      <Pressable style={styles.pressBtn} onPressOut={pressOut}>
+        <Ionicons name={icon} size={size} color="#064e3b" />
       </Pressable>
     </View>
   );

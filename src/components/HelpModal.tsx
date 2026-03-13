@@ -1,18 +1,23 @@
+import { SetStateAction, Dispatch } from "react";
 import { StyleSheet, Text, View, Pressable, Modal} from "react-native";
 
-const HelpModal = (props) => {
+interface HelpModalProps {
+  closeHelp: Dispatch<SetStateAction<boolean>>;
+  showHelp: boolean;
+}
+
+const HelpModal = ({showHelp, closeHelp}: HelpModalProps) => {
   return(
     <Modal
       transparent
-      visible={props.showHelp}
+      visible={showHelp}
       animationType="fade"
-      onRequestClose={() => props.closeHelp(false)}
+      onRequestClose={() => closeHelp(false)}
     >
       <View style={styles.overlay}>
         <View style={styles.modalContent}>
           <Text style={styles.modalTitle}>Advanced Mode</Text>
           <Text style={styles.modalFeature}>Touch features:</Text>
-          <Text style={styles.modalText}><Text style={{fontWeight:'bold'}}>Enable/Disable Advanced Mode</Text>: Double tap</Text>
           <Text style={styles.modalText}><Text style={{fontWeight:'bold'}}>Volume Control</Text>: Swipe up or down</Text>
           <Text style={styles.modalText}><Text style={{fontWeight:'bold'}}>Track Control</Text>: Swipe left or right</Text>
           <Text style={styles.modalText}><Text style={{fontWeight:'bold'}}>Rewind Song</Text>: Long press</Text>
@@ -23,7 +28,7 @@ const HelpModal = (props) => {
           <Text style={styles.modalText}><Text style={{fontWeight:'bold'}}>Play/Pause</Text>: Single Click</Text>
           <Text style={styles.modalText}><Text style={{fontWeight:'bold'}}>Next Song</Text>: Double click</Text>
           <Text style={styles.modalText}><Text style={{fontWeight:'bold'}}>Previous Song</Text>: Triple Click</Text>
-          <Pressable onPress={() => props.closeHelp(false)} style={styles.closeButton}>
+          <Pressable onPress={() => closeHelp(false)} style={styles.closeButton}>
             <Text style={styles.buttonText}>Close</Text>
           </Pressable>
         </View>

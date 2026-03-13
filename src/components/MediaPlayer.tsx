@@ -2,72 +2,43 @@
  * ***Component Information***
  * Licence/Royalty Free Music Source: https://pixabay.com/
  * Media Player component displays track info and allows track control
- *
- *
- * // TODO: Gesture handler conflict between "mouse" clicks and taps
- *  taps prevent moving to and from "advanced mode". add a toggle switch on player
- *  or control options through settings
  * 
  */
 import {
   StyleSheet,
   Text,
   View,
-  Button,
   Pressable,
-  Alert,
   Image,
-  Modal,
 } from "react-native";
-import { useState, useEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useState, useEffect, act } from "react";
 import { useAudioPlayer, useAudioPlayerStatus } from "expo-audio";
 import Slider from "@react-native-community/slider";
-import {
-  Gesture,
-  GestureDetector,
-  LongPressGesture,
-  PointerType,
-  MouseButton,
-} from "react-native-gesture-handler";
+import { GestureDetector } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
+import { usePlayerGestures } from "@/hooks/usePlayerGestures";
 
-import HelpModal from "./HelpModal";
-import MediaButton from "./MediaButton";
-import { SongContext, useSongPlayer } from "../context/SongContext";
+import HelpModal from "@/components/HelpModal";
+import MediaButton from "@/components/MediaButton";
+import { useSongPlayer } from "@/context/SongContext";
+import { useMediaControls } from "@/context/MediaControlContext";
 
 const MediaPlayer = () => {
-  const { currentSong, changeTrack } = useSongPlayer();
+  const { currentSong, changeTrack} = useSongPlayer();
+  const { mediaControls } = useMediaControls();
 
   const [isPlay, setIsPlay] = useState(true);
-  const [currentTime, setCurrentTime] = useState("");
-  const [formattedSongDuration, setFormattedSongDuration] = useState("0:00");
-  const [advancedModeEnabled, setAdvancedModeEnabled] = useState(false);
   const [showHelpModal, setshowHelpModal] = useState(false);
-  const [showVolume, setshowVolume] = useState(false);
+  const [ showVolume, setShowVolume] = useState(false);
+
   const player = useAudioPlayer(currentSong.location);
   const status = useAudioPlayerStatus(player).currentTime;
   const [currentVolume, setCurrentVolume] = useState(player.volume);
   const duration = player.duration;
   const coverImages = [
-    require("../assets/vinyl-record.gif"),
-    require("../assets/vinyl-record-static.png"),
+    require("@/assets/vinyl-record.gif"),
+    require("@/assets/vinyl-record-static.png"),
   ];
-  const [currentImage, setCurrentImage] = useState(coverImages[0]);
-  const MAX_TRANSLATION_Y = 5000;
-
-  const navigation = useNavigation();
-
-  // update current time
-  useEffect(() => {
-    setCurrentTime(formatTime(status));
-  }, [status]);
-
-  // update song duration
-  useEffect(() => {
-    if (duration == 0) return;
-    else setFormattedSongDuration(formatTime(duration));
-  }, [duration]);
 
   // play when song changed
   useEffect(() => {
@@ -78,21 +49,17 @@ const MediaPlayer = () => {
     }
   }, [currentSong]);
 
-  // change image when isPlay variable changed
-  useEffect(() => {
-    if (isPlay) {
-      setCurrentImage(coverImages[0]);
-    } else {
-      setCurrentImage(coverImages[1]);
-    }
-  }, [isPlay]);
-
-  const formatTime = (totalSeconds) => {
+  const formatTime = (totalSeconds: number) => {
+    if(!totalSeconds) return "0:00";
     const mins = Math.floor(totalSeconds / 60);
     const secs = totalSeconds % 60;
     const formattedSecs = secs < 10 ? `0${Math.floor(secs)}` : Math.floor(secs);
     return `${mins}:${formattedSecs}`;
   };
+
+  const currentTime = formatTime(status);
+  const formattedSongDuration = formatTime(duration);
+  const currentImage = isPlay ? coverImages[0] : coverImages[1];
 
   const handlePlayButton = () => {
     if (isPlay) {
@@ -100,138 +67,33 @@ const MediaPlayer = () => {
     } else {
       player.play();
     }
-
     setIsPlay((prevVal) => !prevVal);
   };
 
-  const calculateVolumeChanges = (value) => {
-    const clamped = Math.min(Math.abs(value), MAX_TRANSLATION_Y);
-    const delta = clamped / MAX_TRANSLATION_Y;
-
-    return value > 0 ? -delta : delta; // down = negative, up = positive
-  };
-
-  {
-    /** Handle Mouse input for Gesture control */
-  }
-
-  const mouseTripleTap = Gesture.Tap()
-    .maxDelay(250)
-    .numberOfTaps(3)
-    .mouseButton(MouseButton.LEFT)
-    .onEnd(() => {
-      //Logic to go to previous song
-      changeTrack(-1);
-    });
-
-  const mouseDoubleTap = Gesture.Tap()
-    .maxDelay(250)
-    .numberOfTaps(2)
-    .mouseButton(MouseButton.LEFT)
-    .onEnd(() => {
-      // Logic to go to next song
-      changeTrack(1);
-    });
-
-  const mouseSingleTap = Gesture.Tap()
-    .numberOfTaps(1)
-    .mouseButton(MouseButton.LEFT)
-    .onEnd(() => {
-      // Logic for Pause/Play
-      handlePlayButton();
-    });
-
-  {
-    /** Handle user tap/general phone input for gesture control */
-  }
-
-  const panGesture = Gesture.Pan()
-    .onUpdate((e) => {
-      const { translationX, translationY } = e;
-
-      if (Math.abs(translationY) > Math.abs(translationX)) {
-        // Vertical swipe for volume control
-        setshowVolume(true);
-        let normalizedY = calculateVolumeChanges(translationY);
-
-        setCurrentVolume((prevVal) => {
-          let newVolume = prevVal + normalizedY;
-
-          if (newVolume >= 1) newVolume = 1;
-          else if (newVolume <= 0.1) newVolume = 0.1;
-
-          return newVolume;
-        });
-        player.volume = currentVolume;
-      }
-    })
-    .onEnd((e) => {
-      const { translationX, translationY } = e;
-
-      if (Math.abs(translationX) > Math.abs(translationY)) {
-        // Horizontal swipe for track control
-        if (translationX > 50) {
-          changeTrack(1);
-        } else if (translationX < -50) {
-          changeTrack(-1);
-        }
-      } else {
-        // Vertical swipe
-        let normalizedY = calculateVolumeChanges(translationY);
-
-        let newVolume = player.volume + normalizedY;
-
-        if (newVolume >= 1) newVolume = 1;
-        else if (newVolume <= 0) newVolume = 0.1;
-
-        player.volume = newVolume;
-
-        // Hide volume text after 2 seconds
-        setTimeout(() => {
-          setshowVolume(false);
-        }, 1000);
-      }
-    });
-
-  const longPressGesture = Gesture.LongPress()
-    .onStart(() => {
-      player.seekTo(0);
-    })
-    .minDuration(750) // Minimum duration in milliseconds for the gesture to be recognized
-    .maxDistance(10); // Maximum distance in points the finger can travel during the long press
-
-  const tapGesture = Gesture.Tap().onStart(() => {
-    handlePlayButton();
+  // Manage track control types
+  const { swipeGestures, mouseGestures, noGestures} = usePlayerGestures({
+    player,
+    handlePlayButton,
+    setShowVolume,
+    setCurrentVolume
   });
-
-  const doubleTap = Gesture.Tap()
-    .maxDuration(500)
-    .numberOfTaps(2)
-    .onStart(() => {
-      setAdvancedModeEnabled((previousState) => !previousState);
-    });
-
-  const pinchGesture = Gesture.Pinch().onUpdate((e) => {
-    if (e.scale > 1) {
-      navigation.navigate("Playlist");
-    }
-  });
-
-  const pinchAndPanGesture = Gesture.Simultaneous(pinchGesture, panGesture);
-
-  const exclusiveGesture = Gesture.Exclusive(
-    mouseTripleTap,
-    mouseDoubleTap,
-    mouseSingleTap,
-    pinchAndPanGesture,
-    longPressGesture,
-    doubleTap,
-    tapGesture,
-  );
 
   const showHelp = () => {
     setshowHelpModal(true);
   };
+
+  const activeGesture = () => {
+    if(mediaControls.GestureControl){ 
+      console.log("Swipe Gestures Selected.");
+      return swipeGestures};
+    if(mediaControls.MouseControl){
+      console.log("Mouse Gestures Selected.");
+      return mouseGestures};
+    if(mediaControls.ButtonControl){
+      return noGestures;
+    }
+    return noGestures;
+  }
 
   return (
     <>
@@ -244,9 +106,12 @@ const MediaPlayer = () => {
         </Pressable>
       </View>
 
-      <GestureDetector
-        gesture={advancedModeEnabled ? exclusiveGesture : doubleTap}
-      >
+{
+/* //TODO: Mouse Buttons Play/Pause does not work - control should come from 
+//player Gesture Hook */
+}
+
+      <GestureDetector gesture={activeGesture()} >
         <View style={styles.mediaPlayer}>
           <View style={styles.imageContainer}>
             <Image style={styles.coverImage} source={currentImage} />
@@ -281,7 +146,7 @@ const MediaPlayer = () => {
             </Text>
           </View>
 
-          {!advancedModeEnabled && (
+          {mediaControls.ButtonControl && (
             <View style={styles.buttonContainer}>
               <View style={styles.buttonRowContainer}>
                 <MediaButton
