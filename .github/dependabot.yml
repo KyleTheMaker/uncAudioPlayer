@@ -1,0 +1,12 @@
+version: 2
+updates:
+  # 1. Update JavaScript libraries (React, React Native, etc.)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    # Optional: Groups updates together to reduce noise
+    groups:
+      dependencies:
+        patterns:
+          - "*"
