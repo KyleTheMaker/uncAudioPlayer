@@ -1,4 +1,4 @@
-# **UncMusicPlayer**
+# **UncAudioPlayer**
 
 This music player offers track control through touch buttons, gestures, and BT Mouse input.
 
