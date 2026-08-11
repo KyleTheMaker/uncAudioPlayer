@@ -1,6 +1,7 @@
 # **UncAudioPlayer**
 
-This music player offers track control through touch buttons, gestures, and BT Mouse input.
+An audio player for all your local files, and multiple ways to navigate through your playlists.  
+The idea is to provide hands-free, and bluetooth control, on top of standard track navigation methods like buttons or swipes.
 
 ## Components
 1. Song  
