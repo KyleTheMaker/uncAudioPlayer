@@ -22,7 +22,7 @@ const MediaButton = ({pressOut, icon, size}: MediaButtonProps) => {
   const theme = useThemeStyles();
   return (
     <View>
-      <Pressable style={[styles.pressBtn,{ backgroundColor: theme.colors.surface, shadowColor: theme.colors.accent}]} onPressOut={pressOut}>
+      <Pressable style={[styles.pressBtn,{ backgroundColor: theme.colors.surface, shadowColor: theme.colors.textPrimary}]} onPressOut={pressOut}>
         <Ionicons name={icon} size={size} color={theme.colors.accent} />
       </Pressable>
     </View>
