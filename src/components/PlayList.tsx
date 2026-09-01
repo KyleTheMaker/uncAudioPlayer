@@ -11,7 +11,7 @@ import { StyleSheet, Text, View, Pressable, FlatList, SectionList } from "react-
 import { useSQLiteContext } from "expo-sqlite";
 import { useState, useEffect, useCallback } from "react";
 import { getPlayListSongs, removeSongFromPlaylist } from "@/data/musicdb";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect } from "expo-router";
 import { useSongPlayer } from "@/context/SongContext";
 import { SongInfo } from "@/types/audio";
 import { useThemeStyles } from "@/context/ThemeContext";
