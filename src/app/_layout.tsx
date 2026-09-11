@@ -9,18 +9,15 @@
  *
  */
 
-import { Ionicons } from "@expo/vector-icons";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SongProvider } from "@/context/SongContext";
 import { ThemeProvider} from "@/context/ThemeContext";
 import  AppTabs  from "@/components/Tabs";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { SQLiteProvider } from "expo-sqlite";
-import { Tabs } from "expo-router";
 
 import { manageDBIfNeeded } from "@/data/musicdb";
 import { MediaControlProvider } from "@/context/MediaControlContext";
-import { View } from "react-native";
 
 export default function App() {
   return (
@@ -29,9 +26,9 @@ export default function App() {
         <SQLiteProvider databaseName="uncMusic.db" onInit={manageDBIfNeeded}>
             <MediaControlProvider>
             <SongProvider>
-                <ThemeProvider>
-                    <AppTabs />                    
-            </ThemeProvider>
+              <ThemeProvider>
+                <AppTabs />           
+              </ThemeProvider>
             </SongProvider>
           </MediaControlProvider>
         </SQLiteProvider>
