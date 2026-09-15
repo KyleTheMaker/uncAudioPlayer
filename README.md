@@ -1,6 +1,6 @@
 # **UncAudioPlayer**
 
-## uncAudioPlayer - An Unconventional Audio Player
+## An Unconventional Audio Player
 
 I'm using this project explore multiplatform app development, and multiple control options for audio tracks. Current Supported controls are: BT Mouse, tap and swipe gestures, and buttons. Future controls I'm exploring are voice command, and visual(Hand) gestures using Machine Learning Models with Tensorflow js.
 
