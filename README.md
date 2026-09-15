@@ -1,70 +1,29 @@
 # **UncAudioPlayer**
 
-An audio player for all your local files, and multiple ways to navigate through your playlists.  
-The idea is to provide hands-free, and bluetooth control, on top of standard track navigation methods like buttons or swipes.
+## An Unconventional Audio Player
 
-## Components
-1. Song  
-A pressable item with a longpress function that opens a customizable button. the main onPress function is intended to play selected song.
+I'm using this project explore multiplatform app development, and multiple control options for audio tracks. Current Supported controls are: BT Mouse, tap and swipe gestures, and buttons. Future controls I'm exploring are voice command, and visual(Hand) gestures using Machine Learning Models with Tensorflow js.
 
-2. MediaButton  
-A pressable button with customizable text and function. intended for song controls(Play, Pause, Next, etc.).
+<p align="center">
+    <img src="https://github.com/KyleTheMaker/kylethemaker.github.io/blob/main/assets/images/uncAudioPlayer-trackPlayer.jpg" width="20%" alt="Player Screen" />
+    &nbsp; &nbsp; &nbsp; &nbsp;
+    <img src="https://github.com/KyleTheMaker/kylethemaker.github.io/blob/main/assets/images/uncAudio-DemoHome.jpg" width="20%" alt="Home Screen" />
+    &nbsp; &nbsp; &nbsp; &nbsp;
+    <img src="https://github.com/KyleTheMaker/kylethemaker.github.io/blob/main/assets/images/uncAudioPlayer-Playlist.jpg" width="20%" alt="Playlist Screen" />
+    &nbsp; &nbsp; &nbsp; &nbsp;
+    <img src="https://github.com/KyleTheMaker/kylethemaker.github.io/blob/main/assets/images/uncAudio-Usage.gif" width="20%" alt="Using the App" />
+</p>
 
-3. MediaPlayer  
-A Component for controlling and displaying the current song, and navigating the current playlist.
+## Roadmap
 
-4. Playlist  
-A customizable list of songs chosen by the user.
+ - [] Repair Swipe Gestures after Dependancy Update
+ - [] SQLite storage for selected folder hash the output of all files to compare for updates. File.digest() expo-file-system
+ - [] define and store audio tracks by ID3 tags, or file name values.
 
-5. Songlist  
-A list of all songs in the app
+## Run the App
 
-6. FileSelector  
-A way to select a music folder from your device, and use that for the audio player.  
-
-7. HelpModal  
-Presents advanced mode instructions.  
-
-8. BluetoothScanButton  
-A component for styling a bluetooth scanner button
-# Combined Components Description  
- - MediaPlayer uses the MediaButton for touch control  
- - SongList and Playlist both use the song component for listing out all songs 
-
-## Resources:
-
-**Create project:**  
-npx create-expo-app@latest --template blank  
-npx expo start --tunnel (for lab computers since they use diff network)  
-npx expo start (for home use)
-
-**Safe Area context for mobile screens:**  
-https://appandflow.github.io/react-native-safe-area-context/
-
-**Expo Audio:**  
-https://docs.expo.dev/versions/latest/sdk/audio/
-
-**React Community Slider (Song Tracking):**  
-https://github.com/callstack/react-native-slider#installation--usage
-
-**Expo SQLite (song and playlist storage):**  
-https://docs.expo.dev/versions/latest/sdk/sqlite/  
-https://github.com/OmonUrkinbaev/SQLiteExampleApp/tree/master
-https://docs.expo.dev/versions/latest/sdk/sqlite/
-
-**Expo Vector Icons:**  
-https://docs.expo.dev/guides/icons/
-
-**Tabs Navigator**  
-https://reactnavigation.org/docs/bottom-tab-navigator/?config=dynamic
-
-**Gesture Handler**  
-https://docs.swmansion.com/react-native-gesture-handler/docs/  
-Run `npx expo prebuild` after installing
-
-**Assets**  
-https://pixabay.com/gifs/record-retro-vinyl-music-8329/
-
-**Expo FileSystem**  
-npx expo install expo-file-system
-https://docs.expo.dev/versions/v53.0.0/sdk/filesystem/
+1. Clone the repository
+2. install dependancies\
+`npm install`
+3. Create development build with\
+`eas build --platform android --profile development`

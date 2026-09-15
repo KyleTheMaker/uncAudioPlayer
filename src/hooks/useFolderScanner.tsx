@@ -20,8 +20,6 @@ export const useFolderScanner = () => {
       }
     },[]);
     
-    //  TODO: Consider Methods where copying full folder isn't 
-    //    necessary and can be loaded upon individual song selection
     //    New Folder Logic select a folder containing music list out all audio/mpeg files
     //    only download/copy file from device as user requests.moving to next song will have 
     //    to see if it's already copied, or should be re-copied.

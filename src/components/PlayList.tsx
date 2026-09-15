@@ -59,11 +59,7 @@ const PlayList = () => {
   );
   
 
-  // for each song, check the first letter of the name
-  // Song is object with properties name, and location.
-  // Find index value of sections where first letter matches
-  // sections object array will have properties header, and data[]
-  // if letter not found, add new object with header of letter.
+  // Split list of songs into alphabetical sections
   const splitTrackSections = (songs: SongInfo[]) => {
     let sections: Section[] = [];
     const sectionMap = new Map<string, Section>();

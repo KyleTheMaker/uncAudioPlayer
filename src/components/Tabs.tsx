@@ -28,7 +28,7 @@ return (
                 headerShown: false,
                 tabBarLabel: "Index",
                 tabBarIcon: ({ color, size }) => (
-                    <Ionicons name='home' size={size} color={color} />
+                    <Ionicons name='home' size={size} color={color}/>
                 )}}
         />
         <Tabs.Screen
@@ -38,7 +38,7 @@ return (
                 headerShown: false,
                 tabBarLabel: "Playlist",
                 tabBarIcon: ({ color, size }) => (
-                    <Ionicons name='albums' size={size} color={color} />
+                    <Ionicons name='albums' size={size} color={color}/>
                 )}}
             />
         <Tabs.Screen
@@ -48,7 +48,7 @@ return (
                 headerShown: false,
                 tabBarLabel: "Player",
                 tabBarIcon: ({ color, size }) => (
-                    <Ionicons name='musical-notes' size={size} color={color} />
+                    <Ionicons name='musical-notes' size={size} color={color}/>
                 )
             }}
                 />

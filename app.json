@@ -33,6 +33,13 @@
           "enableBackgroundPlayback": true
         }
       ],
+      [
+        "expo-navigation-bar",
+        {
+          "enforceContrast": true,
+          "hidden": true
+        }
+      ],
       "expo-sqlite",
       "expo-router",
       "expo-font",
