@@ -14,7 +14,9 @@ export default function PlaylistScreen() {
     <SafeAreaView
       style={{ flex: 1, flexDirection: "column", overflow: "hidden", backgroundColor: theme.colors.background }}
     >
+      <View style={[styles.container,{backgroundColor: theme.colors.background, shadowColor: theme.colors.accent}]}>
       <PlayList />
+      </View>
 
       <StatusBar style="auto" />
     </SafeAreaView>
@@ -24,19 +26,13 @@ export default function PlaylistScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#261a68",
+    marginBottom: 16,
   },
   container: {
     flex: 1,
-    marginHorizontal: 20,
-    marginTop: 20,
     marginBottom: 20,
-    padding: 18,
+    paddingBottom: 20,
     borderRadius: 20,
-
-    backgroundColor: "#a7f3d0",
-
-    shadowColor: "#0d9488",
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.25,
     shadowRadius: 12,

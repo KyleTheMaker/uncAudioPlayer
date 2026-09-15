@@ -19,7 +19,7 @@ export default function App() {
     <SafeAreaView
       style={{ flex: 1, flexDirection: "column", overflow: "hidden",backgroundColor: theme.colors.background }}
     >
-      <View style={[styles.container,{backgroundColor: theme.colors.surface, shadowColor: theme.colors.accent}]}>
+      <View style={[styles.container,{backgroundColor: theme.colors.background, shadowColor: theme.colors.accent}]}>
         <MediaPlayer />
       </View>
     </SafeAreaView>
@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     borderRadius: 22,
+    marginBottom: 16,
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.25,
     shadowRadius: 10,
