@@ -1,0 +1,58 @@
+name: Dev Branches - Build & Update
+on:
+  push:
+    branches-ignore:
+      - main
+
+jobs:
+  dev-pipeline:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Setup Expo and EAS
+        uses: expo/expo-github-action@v8
+        with:
+          token: ${{ secrets.EXPO_TOKEN }}
+          eas-version: latest
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Calculate Native Fingerprint
+        id: fingerprint
+        run: |
+          HASH=$(npx @expo/fingerprint . --hashOnly)
+          echo "hash=$HASH" >> $GITHUB_OUTPUT
+
+      - name: Publish OTA Update to Feature Branch
+        run: |
+          eas update --branch ${{ github.ref_name }} --message "Dev update for commit ${{ github.sha }}"
+
+      - name: Check for Existing Dev Build Tag
+        id: check_build
+        run: |
+          if git ls-remote --tags origin | grep -q "dev-${{ steps.fingerprint.outputs.hash }}"; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build Android Dev Profile
+        if: steps.check_build.outputs.exists != 'true'
+        run: |
+          eas build --platform android --profile development --non-interactive --wait
+
+      - name: Tag Repository to Cache Native Build
+        if: steps.check_build.outputs.exists != 'true'
+        run: |
+          git tag dev-${{ steps.fingerprint.outputs.hash }}
+          git push origin dev-${{ steps.fingerprint.outputs.hash }}
