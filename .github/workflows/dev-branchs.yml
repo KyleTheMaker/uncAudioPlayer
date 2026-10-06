@@ -30,7 +30,7 @@ jobs:
       - name: Calculate Native Fingerprint
         id: fingerprint
         run: |
-          HASH=$(npx @expo/fingerprint . --hashOnly)
+          HASH=$(npx @expo/fingerprint . | jq -r .hash)
           echo "hash=$HASH" >> $GITHUB_OUTPUT
 
       - name: Publish OTA Update to Feature Branch

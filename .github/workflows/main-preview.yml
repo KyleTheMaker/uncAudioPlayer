@@ -29,11 +29,11 @@ jobs:
          - name: Install dependancies
            run: npm ci
 
-         - name: Calculate NAtive Fingerprint
+         - name: Calculate Native Fingerprint
            id: fingerprint
            run: |
-            HASH=$(npx @expo/fingerprint . --hashOnly)
-            echo "hash=HASH" >> $GITHUB_OUTPUT
+            HASH=$(npx @expo/fingerprint . | jq -r .hash)
+            echo "hash=$HASH" >> $GITHUB_OUTPUT
 
          - name: Check for Existing Release
            id: check_release
