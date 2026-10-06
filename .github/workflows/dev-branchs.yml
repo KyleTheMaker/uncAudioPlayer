@@ -35,7 +35,7 @@ jobs:
 
       - name: Publish OTA Update to Feature Branch
         run: |
-          eas update --branch ${{ github.ref_name }} --message "Dev update for commit ${{ github.sha }}"
+          eas update --branch ${{ github.ref_name }} --platform android --message "Dev update for commit ${{ github.sha }}"
 
       - name: Check for Existing Dev Build Tag
         id: check_build
