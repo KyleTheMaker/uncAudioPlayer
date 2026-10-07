@@ -21,7 +21,7 @@ jobs:
             node-version: 22
         
          - name: Setup Expo and EAS
-           uses: expo/expo-github-action@v8
+           uses: expo/expo-github-action@v9
            with:
             token: ${{ secrets.GITHUB_TOKEN }}
             eas-version: latest
