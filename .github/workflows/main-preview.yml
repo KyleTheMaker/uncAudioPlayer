@@ -59,7 +59,7 @@ jobs:
          - name: Download Build Artifact
            if: steps.check_release.outputs.exists != 'true'
            run: |
-            eas build:download --platform android --profile preview --non-interactive
+            eas build:download --platform android --non-interactive
 
          - name: Create Github Pre-release
            if: steps.check_release.outputs.exists != 'true'
