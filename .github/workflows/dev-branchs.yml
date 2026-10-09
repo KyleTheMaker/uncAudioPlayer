@@ -1,8 +1,8 @@
 name: Dev Branches - Build & Update
 on:
   push:
-    branches-ignore:
-      - main
+    branches:
+      - development
 
 jobs:
   dev-pipeline:

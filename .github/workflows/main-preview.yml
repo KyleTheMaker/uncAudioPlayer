@@ -23,7 +23,7 @@ jobs:
          - name: Setup Expo and EAS
            uses: expo/expo-github-action@v8
            with:
-            token: ${{ secrets.GITHUB_TOKEN }}
+            token: ${{ secrets.EXPO_TOKEN }}
             eas-version: latest
 
          - name: Install dependancies
@@ -49,7 +49,7 @@ jobs:
          - name: Publish OTA Update (No native changes)
            if: steps.check_release.outputs.exists == 'true'
            run: |
-            eas update --branch preview --message "Automated update for commit ${{ github.sha }}"
+            eas update --branch preview --platform android --message "Automated update for commit ${{ github.sha }}"
         
          - name: Build Android Preview
            if: steps.check_release.outputs.exists != 'true'
@@ -59,14 +59,14 @@ jobs:
          - name: Download Build Artifact
            if: steps.check_release.outputs.exists != 'true'
            run: |
-            eas build:download --platoform android --profile preview --non-interactive
+            eas build:download --platform android --profile preview --non-interactive
 
          - name: Create Github Pre-release
            if: steps.check_release.outputs.exists != 'true'
            env:
             GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
            run: |
-            gh release create v.0.1.0-alpha-${{ steps.fingerprint.outputs.hash }} \
+            gh release create v0.1.0-alpha-${{ steps.fingerprint.outputs.hash }} \
                 --target main \
                 --prerelease \
                 --title "Preview Build (${{ steps.fingerprint.outputs.hash }})" \
