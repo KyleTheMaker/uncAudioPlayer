@@ -31,6 +31,8 @@ jobs:
 
          - name: Calculate Native Fingerprint
            id: fingerprint
+           env:
+              APP_VARIANT: preview
            run: |
             HASH=$(npx @expo/fingerprint . | jq -r .hash)
             echo "hash=$HASH" >> $GITHUB_OUTPUT
