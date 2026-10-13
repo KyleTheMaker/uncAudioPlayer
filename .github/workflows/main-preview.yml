@@ -61,7 +61,9 @@ jobs:
          - name: Download Build Artifact
            if: steps.check_release.outputs.exists != 'true'
            run: |
-            eas build:download --platform android --fingerprint ${{ steps.fingerprint.outputs.hash }} --non-interactive
+            BUILD_ID=$(eas build:list --platform android --status finished --limit 1 --json | jq -r '.[0].id')
+            echo "Downloading Build ID: $BUILD_ID"
+            eas build:download --build-id $BUILD_ID --non-interactive
 
          - name: Create Github Pre-release
            if: steps.check_release.outputs.exists != 'true'
