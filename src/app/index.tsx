@@ -41,7 +41,7 @@ const Header = () => {
       <Text
         style={[styles.headerTitle, {color: theme.colors.textPrimary}]}
       >
-        uncMusicPlayer
+        uncAudioPlayer
       </Text>
     </View>
   );
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   },
   headerWrapper: {
     marginHorizontal: 20,
-    paddingVertical: 16,
+    paddingVertical: 8,
     borderRadius: 18,
     shadowColor: "#0d9488",
     shadowOffset: { width: 0, height: 4 },
@@ -72,10 +72,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   headerTitle: {
-    fontSize: 20,
+    fontSize: 32,
     fontWeight: "800",
     letterSpacing: 0.8,
-    textTransform: "uppercase",
   },
   content: {
     flex: 1,
