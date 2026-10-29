@@ -17,7 +17,7 @@ I'm using this project explore multiplatform app development, and multiple contr
 ## Roadmap
 
  [] Repair Swipe Gestures after Dependancy Update
- - [x] CI/CD workflows for development and preview builds.
+ [x] CI/CD workflows for development and preview builds.
  - [x] Implement Jest for feature testing
  - [] SQLite storage for selected folder hash the output of all files to compare for updates. File.digest() expo-file-system
  - [] define and store audio tracks by ID3 tags, or file name values.
